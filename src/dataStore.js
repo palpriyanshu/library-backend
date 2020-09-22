@@ -3,15 +3,54 @@ class DataStore {
     this.client = client;
   }
 
-  setId(key, value) {
+  incrID(idName) {
     return new Promise((resolve) => {
-      this.client.set(key, value, resolve);
+      this.client.incr(idName, (err, incrementedID) => {
+        resolve(incrementedID);
+      });
     });
   }
 
-  deleteId(key) {
+  createSession(userName) {
     return new Promise((resolve) => {
-      this.client.del(key, resolve);
+      this.incrID('sessId').then((sessId) =>
+        this.client.set(`sess_${sessId}`, userName, 'EX', 2592000, () => {
+          resolve(sessId);
+        })
+      );
+    });
+  }
+
+  getSession(sessId) {
+    return new Promise((resolve) => {
+      this.client.get(`sess_${sessId}`, (err, userName) => {
+        resolve(userName);
+      });
+    });
+  }
+
+  getUser(id) {
+    return new Promise((resolve) => {
+      this.client.hgetall(id, (err, result) => resolve(result));
+    });
+  }
+
+  registerUser(details) {
+    return new Promise((resolve) => {
+      this.client.hmset(
+        details.login,
+        'name',
+        details.name,
+        'avatarUrl',
+        details.avatar_url,
+        resolve
+      );
+    });
+  }
+
+  deleteSession(sesId) {
+    return new Promise((resolve) => {
+      this.client.del(`sess_${sesId}`, resolve);
     });
   }
 }

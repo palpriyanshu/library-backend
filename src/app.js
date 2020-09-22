@@ -4,8 +4,11 @@ const redis = require('redis');
 const { DataStore } = require('./dataStore');
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
 
-const { redirectToGithub, authenticateUser } = require('./handleOAuth');
-const { closeSession } = require('./handlers');
+const {
+  isUserLoggedIn,
+  redirectToGithub,
+  authenticateUser,
+} = require('./handleOAuth');
 
 const app = express();
 
@@ -28,10 +31,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/authenticate/', redirectToGithub);
+app.get('/isUserLoggedIn', isUserLoggedIn);
+
+app.get('/api/authenticate', redirectToGithub);
 
 app.get('/gitOauth/authCode', authenticateUser);
-
-app.get('/logOut', closeSession);
 
 module.exports = { app };
