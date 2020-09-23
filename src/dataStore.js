@@ -53,6 +53,28 @@ class DataStore {
       this.client.del(`sess_${sesId}`, resolve);
     });
   }
+
+  addBook(key, fieldValuePairs) {
+    return new Promise((resolve) => {
+      this.client.hmset(`book_${key}`, fieldValuePairs, resolve);
+    });
+  }
+
+  getAllBooksName() {
+    return new Promise((resolve) => {
+      this.client.keys('*book*', (err, result) => resolve(result));
+    });
+  }
+
+  getBooks() {
+    return new Promise((resolve) => {
+      this.getAllBooksName().then((booksName) => {
+        booksName.map((bookName) => {
+          this.client.hgetall(bookName, (err, result) => resolve(result));
+        });
+      });
+    });
+  }
 }
 
 module.exports = { DataStore };

@@ -11,6 +11,8 @@ const {
   closeSession,
 } = require('./handleOAuth');
 
+const { getBooks } = require('./handleBooks');
+
 const app = express();
 
 const client = redis.createClient({
@@ -37,6 +39,8 @@ app.get('/user', currentUser);
 app.get('/api/authenticate', redirectToGithub);
 
 app.get('/gitOauth/authCode', authenticateUser);
+
+app.get('/getBooks', getBooks);
 
 app.post('/logOut', closeSession);
 
