@@ -29,9 +29,9 @@ class DataStore {
     });
   }
 
-  getUser(id) {
+  getUser(userName) {
     return new Promise((resolve) => {
-      this.client.hgetall(id, (err, result) => resolve(result));
+      this.client.hgetall(userName, (err, result) => resolve(result));
     });
   }
 

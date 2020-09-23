@@ -5,9 +5,10 @@ const { DataStore } = require('./dataStore');
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
 
 const {
-  isUserLoggedIn,
+  currentUser,
   redirectToGithub,
   authenticateUser,
+  closeSession,
 } = require('./handleOAuth');
 
 const app = express();
@@ -31,10 +32,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/isUserLoggedIn', isUserLoggedIn);
+app.get('/user', currentUser);
 
 app.get('/api/authenticate', redirectToGithub);
 
 app.get('/gitOauth/authCode', authenticateUser);
+
+app.post('/logOut', closeSession);
 
 module.exports = { app };

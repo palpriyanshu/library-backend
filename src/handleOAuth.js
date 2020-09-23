@@ -1,14 +1,22 @@
 const fetch = require('node-fetch');
 
-const isUserLoggedIn = async function (req, res) {
+const closeSession = async function (req, res) {
+  const { dataStore } = req.app.locals;
+  const { sessId } = req.cookies;
+  await dataStore.deleteSession(sessId);
+  res.clearCookie('sessId');
+  res.send(JSON.stringify({ status: true }));
+};
+
+const currentUser = async function (req, res) {
   const { dataStore } = req.app.locals;
   const { sessId } = req.cookies;
   let sessionId = null;
   if (sessId) {
     sessionId = await dataStore.getSession(sessId);
   }
-  const isLoggedIn = sessionId ? true : false;
-  res.send(JSON.stringify(isLoggedIn));
+  const user = sessionId ? await dataStore.getUser(sessionId) : null;
+  res.send(JSON.stringify(user));
 };
 
 const redirectToGithub = async function (req, res) {
@@ -20,7 +28,7 @@ const redirectToGithub = async function (req, res) {
   }
 
   if (sessionId) {
-    res.redirect('http://localhost:3000/library/private/category/All');
+    res.redirect('http://localhost:3000/library/category/All');
     return;
   }
   const url = 'https://github.com/login/oauth/authorize';
@@ -54,7 +62,7 @@ const registerUser = async function (res, dataStore, details) {
   const sessId = await dataStore.createSession(details.login);
   await dataStore.registerUser(details);
   res.cookie('sessId', sessId);
-  res.redirect('http://localhost:3000/library/private/category/All');
+  res.redirect('http://localhost:3000/library/category/All');
 };
 
 const authenticateUser = function (req, res) {
@@ -68,7 +76,8 @@ const authenticateUser = function (req, res) {
 };
 
 module.exports = {
-  isUserLoggedIn,
+  currentUser,
   redirectToGithub,
   authenticateUser,
+  closeSession,
 };
