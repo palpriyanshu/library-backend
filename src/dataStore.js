@@ -55,7 +55,6 @@ class DataStore {
   }
 
   addBook(key, fieldValuePairs) {
-    console.log(key);
     return new Promise((resolve) => {
       this.client.hmset(`book_${key}`, fieldValuePairs, resolve);
     });
@@ -67,6 +66,32 @@ class DataStore {
       this.client.keys('book*', (err, books) => {
         const result = books.reduce(
           (m, bookName) => m.hgetall(bookName),
+          multi
+        );
+        result.exec((err, res) => {
+          resolve(res);
+        });
+      });
+    });
+  }
+
+  registerBookToUser(user, bookId) {
+    return new Promise((resolve) => {
+      this.client.hmset(user, `book_${bookId}`, bookId, (err, result) => {
+        this.client.hmset(`book_${bookId}`, 'isAvailable', false, resolve);
+      });
+    });
+  }
+
+  getUserBooks(user) {
+    return new Promise((resolve) => {
+      const multi = this.client.multi();
+      this.client.hgetall(user, (err, userDetails) => {
+        const usersBooks = Object.keys(userDetails).filter((key) =>
+          key.includes('book_')
+        );
+        const result = usersBooks.reduce(
+          (m, bookId) => m.hgetall(bookId),
           multi
         );
         result.exec((err, res) => {
