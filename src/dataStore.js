@@ -55,22 +55,22 @@ class DataStore {
   }
 
   addBook(key, fieldValuePairs) {
+    console.log(key);
     return new Promise((resolve) => {
       this.client.hmset(`book_${key}`, fieldValuePairs, resolve);
     });
   }
 
-  getAllBooksName() {
+  getAllBooks() {
     return new Promise((resolve) => {
-      this.client.keys('*book*', (err, result) => resolve(result));
-    });
-  }
-
-  getBooks() {
-    return new Promise((resolve) => {
-      this.getAllBooksName().then((booksName) => {
-        booksName.map((bookName) => {
-          this.client.hgetall(bookName, (err, result) => resolve(result));
+      const multi = this.client.multi();
+      this.client.keys('book*', (err, books) => {
+        const result = books.reduce(
+          (m, bookName) => m.hgetall(bookName),
+          multi
+        );
+        result.exec((err, res) => {
+          resolve(res);
         });
       });
     });
