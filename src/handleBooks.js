@@ -21,4 +21,26 @@ const getMyBooks = async function (req, res) {
   res.send(JSON.stringify(myBooks));
 };
 
-module.exports = { getBooks, registerBookToUser, getMyBooks };
+const getBook = async function (req, res) {
+  const { dataStore } = req.app.locals;
+  const { id } = req.params;
+  const booksDetails = await dataStore.getBookDetail(id);
+  res.send(booksDetails);
+};
+
+const returnBook = async function (req, res) {
+  const { sessId } = req.cookies;
+  const { dataStore } = req.app.locals;
+  const { id } = req.body;
+  const sessionId = await dataStore.getSession(sessId);
+  await dataStore.returnBook(sessionId, id);
+  res.json({ status: true });
+};
+
+module.exports = {
+  getBooks,
+  registerBookToUser,
+  getMyBooks,
+  getBook,
+  returnBook,
+};

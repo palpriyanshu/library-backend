@@ -11,7 +11,13 @@ const {
   closeSession,
 } = require('./handleOAuth');
 
-const { getBooks, registerBookToUser, getMyBooks } = require('./handleBooks');
+const {
+  getBooks,
+  registerBookToUser,
+  getMyBooks,
+  getBook,
+  returnBook,
+} = require('./handleBooks');
 
 const app = express();
 
@@ -41,8 +47,10 @@ app.get('/api/authenticate', redirectToGithub);
 app.get('/gitOauth/authCode', authenticateUser);
 
 app.get('/getBooks', getBooks);
+app.get('/getBook/:id', getBook);
 app.get('/myBooks', getMyBooks);
 app.post('/registerBookToUser', registerBookToUser);
+app.post('/returnBook', returnBook);
 
 app.post('/logOut', closeSession);
 

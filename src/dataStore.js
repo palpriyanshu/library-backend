@@ -100,6 +100,20 @@ class DataStore {
       });
     });
   }
+
+  getBookDetail(id) {
+    return new Promise((resolve) => {
+      this.client.hgetall(`book_${id}`, (err, result) => resolve(result));
+    });
+  }
+
+  returnBook(userId, bookId) {
+    return new Promise((resolve) => {
+      this.client.hdel(userId, `book_${bookId}`, (err, result) => {
+        this.client.hmset(`book_${bookId}`, 'isAvailable', true, resolve);
+      });
+    });
+  }
 }
 
 module.exports = { DataStore };
