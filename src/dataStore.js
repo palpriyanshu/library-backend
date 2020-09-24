@@ -14,7 +14,7 @@ class DataStore {
   createSession(userName) {
     return new Promise((resolve) => {
       this.incrID('sessId').then((sessId) =>
-        this.client.set(`sess_${sessId}`, userName, 'EX', 2592000, () => {
+        this.client.set(`sess_${sessId}`, userName, () => {
           resolve(sessId);
         })
       );

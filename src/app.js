@@ -8,6 +8,7 @@ const {
   currentUser,
   redirectToGithub,
   authenticateUser,
+  getCurrentUserId,
   closeSession,
 } = require('./handleOAuth');
 
@@ -41,10 +42,9 @@ app.use((req, res, next) => {
 });
 
 app.get('/user', currentUser);
-
 app.get('/api/authenticate', redirectToGithub);
-
 app.get('/gitOauth/authCode', authenticateUser);
+app.use(getCurrentUserId);
 
 app.get('/getBooks', getBooks);
 app.get('/getBook/:id', getBook);

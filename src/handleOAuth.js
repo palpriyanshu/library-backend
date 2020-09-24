@@ -5,7 +5,14 @@ const closeSession = async function (req, res) {
   const { sessId } = req.cookies;
   await dataStore.deleteSession(sessId);
   res.clearCookie('sessId');
-  res.send(JSON.stringify({ status: true }));
+  res.json({ status: true });
+};
+
+const getCurrentUserId = async function (req, res, next) {
+  const { sessId } = req.cookies;
+  const { dataStore } = req.app.locals;
+  req.app.locals.userId = await dataStore.getSession(sessId);
+  next();
 };
 
 const currentUser = async function (req, res) {
@@ -16,7 +23,7 @@ const currentUser = async function (req, res) {
     sessionId = await dataStore.getSession(sessId);
   }
   const user = sessionId ? await dataStore.getUser(sessionId) : null;
-  res.send(JSON.stringify(user));
+  res.json(user);
 };
 
 const redirectToGithub = async function (req, res) {
@@ -79,5 +86,6 @@ module.exports = {
   currentUser,
   redirectToGithub,
   authenticateUser,
+  getCurrentUserId,
   closeSession,
 };
