@@ -27,14 +27,9 @@ const currentUser = async function (req, res) {
 };
 
 const redirectToGithub = async function (req, res) {
-  const { client_id, dataStore } = req.app.locals;
+  const { client_id } = req.app.locals;
   const { sessId } = req.cookies;
-  let sessionId = null;
   if (sessId) {
-    sessionId = await dataStore.getSession(sessId);
-  }
-
-  if (sessionId) {
     res.redirect('http://localhost:3000/library/category/All');
     return;
   }
@@ -66,8 +61,12 @@ const getUserDetails = function (access_token) {
 };
 
 const registerUser = async function (res, dataStore, details) {
+  const user = await dataStore.getUser(details.login);
+  if (!user) {
+    console.log('here');
+    await dataStore.registerUser(details);
+  }
   const sessId = await dataStore.createSession(details.login);
-  await dataStore.registerUser(details);
   res.cookie('sessId', sessId);
   res.redirect('http://localhost:3000/library/category/All');
 };
@@ -76,7 +75,7 @@ const authenticateUser = function (req, res) {
   const { client_id, client_secret, dataStore } = req.app.locals;
   const { code } = req.query;
   getAccessToken(client_id, client_secret, code).then(({ access_token }) => {
-    getUserDetails(access_token).then((userDetails) => {
+    getUserDetails(access_token).then(async (userDetails) => {
       registerUser(res, dataStore, userDetails);
     });
   });

@@ -1,3 +1,5 @@
+const { fetchBook } = require('./bookFetcher.js');
+
 const getBooks = async function (req, res) {
   const { dataStore } = req.app.locals;
   const books = await dataStore.getAllBooks();
@@ -31,10 +33,20 @@ const returnBook = async function (req, res) {
   res.json({ status: true });
 };
 
+const addBook = async function (req, res) {
+  const { bookId } = req.body;
+  const { dataStore } = req.app.locals;
+  const book = await fetchBook(bookId);
+  book.isAvailable = true;
+  await dataStore.addBook(bookId, book);
+  res.json({ status: true });
+};
+
 module.exports = {
   getBooks,
   registerBookToUser,
   getMyBooks,
   getBook,
   returnBook,
+  addBook,
 };

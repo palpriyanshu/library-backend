@@ -18,6 +18,7 @@ const {
   getMyBooks,
   getBook,
   returnBook,
+  addBook,
 } = require('./handleBooks');
 
 const app = express();
@@ -51,6 +52,7 @@ app.get('/getBook/:id', getBook);
 app.get('/myBooks', getMyBooks);
 app.post('/registerBookToUser', registerBookToUser);
 app.post('/returnBook', returnBook);
+app.post('/addBook', addBook);
 
 app.post('/logOut', closeSession);
 
