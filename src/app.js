@@ -3,7 +3,9 @@ const cookieParser = require('cookie-parser');
 const { getRedisClient } = require('./redisClient.js');
 const path = require('path');
 const { DataStore } = require('./dataStore');
-const { CLIENT_ID, CLIENT_SECRET } = process.env;
+const dotenv = require('dotenv');
+dotenv.config();
+const { CLIENT_ID, CLIENT_SECRET, REACT_SERVER } = process.env;
 
 const {
   currentUser,
@@ -26,6 +28,7 @@ const app = express();
 
 app.locals.client_id = CLIENT_ID;
 app.locals.client_secret = CLIENT_SECRET;
+app.locals.react_server = REACT_SERVER;
 app.locals.dataStore = new DataStore(getRedisClient());
 
 app.use(express.json());

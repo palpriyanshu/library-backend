@@ -27,10 +27,11 @@ const currentUser = async function (req, res) {
 };
 
 const redirectToGithub = async function (req, res) {
-  const { client_id } = req.app.locals;
+  const { client_id, react_server } = req.app.locals;
+  console.log(react_server, 'server', react_server);
   const { sessId } = req.cookies;
   if (sessId) {
-    res.redirect('/');
+    res.redirect(react_server);
     return;
   }
   const url = 'https://github.com/login/oauth/authorize';
@@ -59,23 +60,23 @@ const getUserDetails = function (access_token) {
   return fetch('https://api.github.com/user', options).then((e) => e.json());
 };
 
-const registerUser = async function (res, dataStore, details) {
+const registerUser = async function (req, res, details) {
+  const { dataStore, react_server } = req.app.locals;
   const user = await dataStore.getUser(details.login);
   if (!user) {
-    console.log('here');
     await dataStore.registerUser(details);
   }
   const sessId = await dataStore.createSession(details.login);
   res.cookie('sessId', sessId);
-  res.redirect('/');
+  res.redirect(react_server);
 };
 
 const authenticateUser = function (req, res) {
-  const { client_id, client_secret, dataStore } = req.app.locals;
+  const { client_id, client_secret } = req.app.locals;
   const { code } = req.query;
   getAccessToken(client_id, client_secret, code).then(({ access_token }) => {
     getUserDetails(access_token).then(async (userDetails) => {
-      registerUser(res, dataStore, userDetails);
+      registerUser(req, res, userDetails);
     });
   });
 };
