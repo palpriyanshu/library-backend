@@ -28,7 +28,7 @@ const app = express();
 
 app.locals.client_id = CLIENT_ID;
 app.locals.client_secret = CLIENT_SECRET;
-app.locals.react_server = DASHBOARD_URL;
+app.locals.dashboardUrl = DASHBOARD_URL;
 app.locals.dataStore = new DataStore(getRedisClient());
 
 app.use(express.json());
