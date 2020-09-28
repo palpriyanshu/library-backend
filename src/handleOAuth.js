@@ -27,14 +27,14 @@ const currentUser = async function (req, res) {
 };
 
 const redirectToGithub = async function (req, res) {
-  const { client_id, react_server } = req.app.locals;
-  console.log(react_server, 'server', react_server);
+  const { client_id, dashboardUrl } = req.app.locals;
   const { sessId } = req.cookies;
   if (sessId) {
-    res.redirect(react_server);
+    res.redirect(dashboardUrl);
     return;
   }
   const url = 'https://github.com/login/oauth/authorize';
+
   res.redirect(`${url}?client_id=${client_id}`);
   return;
 };
@@ -61,14 +61,14 @@ const getUserDetails = function (access_token) {
 };
 
 const registerUser = async function (req, res, details) {
-  const { dataStore, react_server } = req.app.locals;
+  const { dataStore, dashboardUrl } = req.app.locals;
   const user = await dataStore.getUser(details.login);
   if (!user) {
     await dataStore.registerUser(details);
   }
   const sessId = await dataStore.createSession(details.login);
   res.cookie('sessId', sessId);
-  res.redirect(react_server);
+  res.redirect(dashboardUrl);
 };
 
 const authenticateUser = function (req, res) {

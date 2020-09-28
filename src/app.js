@@ -5,7 +5,7 @@ const path = require('path');
 const { DataStore } = require('./dataStore');
 const dotenv = require('dotenv');
 dotenv.config();
-const { CLIENT_ID, CLIENT_SECRET, REACT_SERVER } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, DASHBOARD_URL } = process.env;
 
 const {
   currentUser,
@@ -28,7 +28,7 @@ const app = express();
 
 app.locals.client_id = CLIENT_ID;
 app.locals.client_secret = CLIENT_SECRET;
-app.locals.react_server = REACT_SERVER;
+app.locals.react_server = DASHBOARD_URL;
 app.locals.dataStore = new DataStore(getRedisClient());
 
 app.use(express.json());
