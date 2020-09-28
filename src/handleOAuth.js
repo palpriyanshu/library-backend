@@ -34,8 +34,7 @@ const redirectToGithub = async function (req, res) {
     return;
   }
   const url = 'https://github.com/login/oauth/authorize';
-  const redirectUri = 'http://localhost:3002/gitOauth/authCode';
-  res.redirect(`${url}?client_id=${client_id}&redirect_uri=${redirectUri}`);
+  res.redirect(`${url}?client_id=${client_id}`);
   return;
 };
 
