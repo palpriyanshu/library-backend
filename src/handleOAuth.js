@@ -30,7 +30,7 @@ const redirectToGithub = async function (req, res) {
   const { client_id } = req.app.locals;
   const { sessId } = req.cookies;
   if (sessId) {
-    res.redirect('/library/category/All');
+    res.redirect('/');
     return;
   }
   const url = 'https://github.com/login/oauth/authorize';
@@ -67,7 +67,7 @@ const registerUser = async function (res, dataStore, details) {
   }
   const sessId = await dataStore.createSession(details.login);
   res.cookie('sessId', sessId);
-  res.redirect('/library/category/All');
+  res.redirect('/');
 };
 
 const authenticateUser = function (req, res) {
