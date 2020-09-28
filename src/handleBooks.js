@@ -34,11 +34,12 @@ const returnBook = async function (req, res) {
 };
 
 const addBook = async function (req, res) {
-  const { bookId } = req.body;
+  // const { bookId } = req.body;
+  const { id } = req.params;
   const { dataStore } = req.app.locals;
-  const book = await fetchBook(bookId);
+  const book = await fetchBook(id);
   book.isAvailable = true;
-  await dataStore.addBook(bookId, book);
+  await dataStore.addBook(id, book);
   res.json({ status: true });
 };
 
