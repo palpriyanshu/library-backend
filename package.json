@@ -17,9 +17,6 @@
     "heroku-cli": "^7.0.9",
     "http": "0.0.1-security",
     "node-fetch": "^2.6.1",
-    "redis": "^3.0.2",
-    "travis": "^0.1.1",
-    "travis-ci": "^2.2.0",
-    "travis-cli": "^1.0.9"
+    "redis": "^3.0.2"
   }
 }
