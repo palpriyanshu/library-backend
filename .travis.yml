@@ -1,0 +1,11 @@
+language: node_js
+node_js: lts/*
+install: npm install
+deploy:
+  provider: heroku
+  app: priyanshu-library-react
+  api_key:
+    secure: AVYeRdS1NE4YZEw6JlzS4D31R9XLJJNi0Sa2sg9nG1Sh782j5D+MgFuqWFeqCJNZozYjfYjdB2a+WXaQct8WteYCgfxT+mElOXHtQvZbI11QOyE03QfdMgDltROQLBYjPLt9/Pva2eJie4Lk9VVtWjIcquy5n1WtPTz6LxT0xKFUmKEUeZAOUnENvN/OdvYqe9mWAlpqUZTWvDgSeksemKQNw7aT16OQzc04kjRiJPjsEz8hGhR2ElV/ZCNRNysECL4Dd2r7Z9M3jmEEF6sxjSGx/BNvpa/pcFGJk0PcCsFOeQeuPX7I31jiNQW4f2h8/i7B8mq7HABpf9daC8kd7NRcoSCWAOneQpQjsUK+5r55XwcyMRufefMdQSB46jpbeFBlr7xZsX0woX1S2WNdUApOKSaqmc1aLXCgbfNV7strgJjcfheksWxpmw8DJzeS2+cmw2bW/6r+Zt+lspjeu/z6HwookM59GBt+qxgS2R2muG0C3EiSP8aplmj6jU0c+b+Y8Zyd6DbBggTwtKQhqQy1ZZPaaO3oZ+rz27Tnov6cCVw1nDL8Ktp7r6EQoS20l86OFroxg9wMrX+6nQwjKpOrsRaFf0lgHvHb8mlzay/Ot+qWUzFcJeWJGnCeEKta5oo/p+PhGz57V3ZX8g+ZLXp2NtA5I6oIRaz57C6lxrM=
+  skip_cleanup: true
+service: redis-server
+before_deploy: ./deploy.sh
