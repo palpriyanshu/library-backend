@@ -19,4 +19,4 @@ cd ../Library-react
 echo "building"
 npm run build 2> /dev/null
 
-mv ./build/* ../library-backend/public
+cp -r ./build/* ../library-backend/public
