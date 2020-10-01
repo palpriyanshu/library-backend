@@ -7,7 +7,6 @@ const getRedisClient = function () {
     });
   }
   return redis.createClient({
-    url: 'redis://127.0.0.1:6379',
     db: 2,
   });
 };
