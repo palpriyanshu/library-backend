@@ -13,6 +13,7 @@ echo "installing"
 npm install 2> /dev/null
 npm run test
 
+rm -rf ./public
 mkdir ./public
 
 cd ../Library-react
@@ -20,3 +21,5 @@ echo "building"
 npm run build 2> /dev/null
 
 cp -r ./build/* ../library-backend/public
+
+rm -rf Library-react
