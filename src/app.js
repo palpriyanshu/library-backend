@@ -5,6 +5,7 @@ const path = require('path');
 const { DataStore } = require('./dataStore');
 const dotenv = require('dotenv');
 dotenv.config();
+
 const { CLIENT_ID, CLIENT_SECRET, DASHBOARD_URL } = process.env;
 
 const {
