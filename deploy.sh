@@ -13,11 +13,12 @@ npm run test
 cd ..
 
 echo 'cloning frontend'
-git clone https://github.com/palpriyanshu/Library-react.git frontend 2> /dev/null
+git clone https://github.com/palpriyanshu/Library-react.git  2> /dev/null
 cd Library-react
 
 echo 'installing'
 npm install 2> /dev/null
+
 echo 'running frontend tests'
 npm run test
 
