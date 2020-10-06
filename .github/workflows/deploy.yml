@@ -1,0 +1,35 @@
+name: Deploy to heroku
+on: push
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: checkout backend
+        run: |
+          git clone https://github.com/palpriyanshu/library-backend.git backend
+          cd backend
+          mkdir -p ./public
+          npm install
+          npm test
+          cd ..
+
+      - name: Create build
+        run: |
+          git clone https://github.com/palpriyanshu/Library-react.git frontend
+          cd frontend
+          npm install
+          npm test
+          npm run build
+          mv build/* ../backend/public/.
+          cd ..
+          rm -rf frontend
+
+      - name: deploy to heroku
+        run: |
+          cd backend
+          git remote add heroku https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/${{secrets.HEROKU_APP_NAME}}.git
+          git add .
+          git commit -m "new commit"
+          git push heroku master --set-upstream -f;
