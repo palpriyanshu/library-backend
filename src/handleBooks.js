@@ -1,5 +1,3 @@
-const { fetchBook } = require('./bookFetcher.js');
-
 const getBooks = async function (req, res) {
   const { dataStore } = req.app.locals;
   const books = await dataStore.getAllBooks();
@@ -34,11 +32,32 @@ const returnBook = async function (req, res) {
 };
 
 const addBook = async function (req, res) {
-  // const { bookId } = req.body;
-  const { id } = req.params;
-  const { dataStore } = req.app.locals;
-  const book = await fetchBook(id);
-  book.isAvailable = true;
+  const {
+    id,
+    title,
+    author,
+    Genre,
+    pageCount,
+    description,
+    publisher,
+    publishedDate,
+  } = req.body;
+
+  const book = {
+    isAvailable: true,
+    title,
+    author,
+    Genre,
+    pageCount,
+    description,
+    publisher,
+    publishedDate,
+    id,
+  };
+
+  const { data } = req.files.image;
+  const { imageStorage, dataStore } = req.app.locals;
+  book.imageUrl = await imageStorage.upload(`book_${id}`, data);
   await dataStore.addBook(id, book);
   res.json({ status: true });
 };

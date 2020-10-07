@@ -1,12 +1,22 @@
 const express = require('express');
+const fileupload = require('express-fileupload');
+const cloudinary = require('cloudinary').v2;
 const cookieParser = require('cookie-parser');
 const { getRedisClient } = require('./redisClient.js');
+const { ImageStorage } = require('./imageStorage');
 const path = require('path');
 const { DataStore } = require('./dataStore');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { CLIENT_ID, CLIENT_SECRET, DASHBOARD_URL } = process.env;
+const {
+  CLIENT_ID,
+  CLIENT_SECRET,
+  DASHBOARD_URL,
+  CLOUD_NAME,
+  CLOUD_SECRET,
+  CLOUD_KEY,
+} = process.env;
 
 const {
   currentUser,
@@ -31,11 +41,18 @@ app.locals.client_id = CLIENT_ID;
 app.locals.client_secret = CLIENT_SECRET;
 app.locals.dashboardUrl = DASHBOARD_URL;
 app.locals.dataStore = new DataStore(getRedisClient());
+cloudinary.config({
+  cloud_name: CLOUD_NAME || 'name',
+  api_key: CLOUD_KEY || 'key',
+  api_secret: CLOUD_SECRET || 'secret',
+});
+app.locals.imageStorage = new ImageStorage(cloudinary);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cookieParser());
+app.use(fileupload());
 
 app.use((req, res, next) => {
   console.log(req.url, req.method);
@@ -52,7 +69,7 @@ app.get('/getBook/:id', getBook);
 app.get('/myBooks', getMyBooks);
 app.post('/registerBookToUser', registerBookToUser);
 app.post('/returnBook', returnBook);
-app.post('/addBook/:id', addBook);
+app.post('/api/addBook', addBook);
 
 app.post('/logOut', closeSession);
 app.get('*', (req, res) => {
