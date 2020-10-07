@@ -16,6 +16,8 @@ jobs:
           cd ..
 
       - name: Create build
+        env:
+          REACT_APP_AUTH_URL: /api/authenticate
         run: |
           git clone https://github.com/palpriyanshu/Library-react.git frontend
           cd frontend
