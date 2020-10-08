@@ -54,6 +54,24 @@ class DataStore {
     });
   }
 
+  addLibrarian(personName) {
+    return new Promise((resolve) => {
+      this.client.lpush('librarian', personName, resolve);
+    });
+  }
+
+  getLibrarians() {
+    return new Promise((resolve) => {
+      this.client.lrange('librarian', 0, 100, (err, list) => resolve(list));
+    });
+  }
+
+  isLibrarian(personName) {
+    return new Promise((resolve) => {
+      this.getLibrarians().then((list) => resolve(list.includes(personName)));
+    });
+  }
+
   addBook(key, fieldValuePairs) {
     return new Promise((resolve) => {
       this.client.hmset(`book_${key}`, fieldValuePairs, resolve);

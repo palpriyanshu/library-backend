@@ -32,6 +32,7 @@ const {
   getMyBooks,
   getBook,
   returnBook,
+  isLibrarian,
   addBook,
 } = require('./handleBooks');
 
@@ -42,9 +43,9 @@ app.locals.client_secret = CLIENT_SECRET;
 app.locals.dashboardUrl = DASHBOARD_URL;
 app.locals.dataStore = new DataStore(getRedisClient());
 cloudinary.config({
-  cloud_name: CLOUD_NAME || 'name',
-  api_key: CLOUD_KEY || 'key',
-  api_secret: CLOUD_SECRET || 'secret',
+  cloud_name: CLOUD_NAME,
+  api_key: CLOUD_KEY,
+  api_secret: CLOUD_SECRET,
 });
 app.locals.imageStorage = new ImageStorage(cloudinary);
 
@@ -69,6 +70,7 @@ app.get('/getBook/:id', getBook);
 app.get('/myBooks', getMyBooks);
 app.post('/registerBookToUser', registerBookToUser);
 app.post('/returnBook', returnBook);
+app.get('/api/isLibrarian', isLibrarian);
 app.post('/api/addBook', addBook);
 
 app.post('/logOut', closeSession);

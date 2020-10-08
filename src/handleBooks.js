@@ -31,6 +31,12 @@ const returnBook = async function (req, res) {
   res.json({ status: true });
 };
 
+const isLibrarian = async function (req, res) {
+  const { userId, dataStore } = req.app.locals;
+  const reply = await dataStore.isLibrarian(userId);
+  res.json({ reply });
+};
+
 const addBook = async function (req, res) {
   const {
     id,
@@ -68,5 +74,6 @@ module.exports = {
   getMyBooks,
   getBook,
   returnBook,
+  isLibrarian,
   addBook,
 };
